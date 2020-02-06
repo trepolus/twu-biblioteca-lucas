@@ -1,11 +1,13 @@
 package com.twu.biblioteca;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -35,6 +37,10 @@ public class CLIOutputTest {
         cli.printListOfBooks();
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
-        assertThat(allWrittenLines, is("FirstBook\nSecondBook\nThirdBook\n"));
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Life is good | Unicorn Gorilla | 2019"),
+                containsString("Fowler"),
+                containsString("2026")
+        ));
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CLI {
 
-    List<String> bookList = new ArrayList<>();
+    List<Book> bookList = new ArrayList<>();
 
     public void printWelcomeMsg() {
         System.out.println("Welcome to Biblioteca. Your one-stop shop for great book titles in Bangalore!");
@@ -13,14 +13,16 @@ public class CLI {
 
     public void printListOfBooks() {
 
-        bookList.add("FirstBook");
-        bookList.add("SecondBook");
-        bookList.add("ThirdBook");
+        Book book1 = new Book("Refactoring", "Martin Fowler", 1998);
+        Book book2 = new Book("Life is good", "Unicorn Gorilla", 2019);
+        Book book3 = new Book("Design Patterns for Noobs", "Lucas Kummer", 2026);
 
-        for (String book : bookList){
+        bookList.add(book1);
+        bookList.add(book2);
+        bookList.add(book3);
+
+        for (Book book : bookList){
             System.out.println(book);
         }
-
-        //System.out.println("FirstBook\nSecondBook\nThirdBook");
     }
 }
