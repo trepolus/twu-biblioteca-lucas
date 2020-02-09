@@ -31,21 +31,44 @@ public class CLI {
     }
 
     public void printMenu() {
-        System.out.println("Press 0 for: List of Books");
-        System.out.println("Press 1 for: Rent Books");
-        System.out.println();
-
+            System.out.println("Press 0 for: List of Books");
+            System.out.println("Press 1 for: Rent Books");
+            System.out.println("Type exit for: Leaving the Application");
     }
 
-    public void doRequiredMenuAction(String chosenOption) {
-        if (chosenOption.equals("0")) {
-            printListOfMediaEntities("TW Library");
+    public boolean doRequiredMenuAction(String chosenOption) {
+        switch (chosenOption){
+            case "0":
+                printListOfMediaEntities("TW Library");
+                return true;
+            case "1":
+                System.out.println("Book rented!");
+                return true;
+            case "exit":
+                System.out.println("Thanks for using our service. Good bye!");
+                return false;
+            default:
+                System.out.println("Please select a valid option!");
+                return true;
         }
     }
 
     public String promptUserInputForMenuOption () {
-        String chosenOption = scanner.next();
+        String chosenOption = scanner.nextLine();
         return chosenOption;
+    }
+
+    public void startMenu(){
+        printWelcomeMsg();
+
+        boolean continueToDisplayMenuOptions = true;
+
+        while (continueToDisplayMenuOptions){
+            printMenu();
+            promptUserInputForMenuOption();
+            String userInput = promptUserInputForMenuOption();
+            continueToDisplayMenuOptions = doRequiredMenuAction(userInput);
+        }
     }
 
 }

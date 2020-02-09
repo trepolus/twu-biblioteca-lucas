@@ -10,9 +10,6 @@ public class BibliotecaApp {
         libraryService.createAndFillLibraryWithBooks(null);
 
         CLI cli = new CLI(libraryService);
-        cli.printWelcomeMsg();
-        cli.printMenu();
-        String chosenOption = cli.promptUserInputForMenuOption();
-        cli.doRequiredMenuAction(chosenOption);
+        cli.startMenu();
     }
 }
