@@ -1,32 +1,32 @@
 package com.twu.biblioteca;
 
+import com.twu.entities.Book;
+import com.twu.entities.MediaEntity;
+import com.twu.service.LibraryService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CLI {
 
-    private List<Book> bookList = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
+    private LibraryService libraryService;
 
-    public CLI() {
-        Book book1 = new Book("Refactoring", "Martin Fowler", 1998);
-        Book book2 = new Book("Life is good", "Unicorn Gorilla", 2019);
-        Book book3 = new Book("Design Patterns for Noobs", "Lucas Kummer", 2026);
-
-        bookList.add(book1);
-        bookList.add(book2);
-        bookList.add(book3);
+    public CLI(LibraryService libraryService) {
+        this.libraryService = libraryService;
     }
 
     public void printWelcomeMsg() {
         System.out.println("Welcome to Biblioteca. Your one-stop shop for great book titles in Bangalore!");
     }
 
-    public void printListOfBooks() {
+    public void printListOfMediaEntities(String libraryName) {
 
-        for (Book book : bookList){
-            System.out.println(book);
+        List mediaEntities = libraryService.getAllMediaEntitiesByLibraryName(libraryName);
+
+        for (Object mediaEntity: mediaEntities){
+            System.out.println(mediaEntity);
         }
     }
 
@@ -37,14 +37,14 @@ public class CLI {
 
     }
 
-    public void doRequiredMenuAction(int chosenOption) {
-        if (chosenOption == 0) {
-            printListOfBooks();
+    public void doRequiredMenuAction(String chosenOption) {
+        if (chosenOption.equals("0")) {
+            printListOfMediaEntities("TW Library");
         }
     }
 
-    public int promptUserInputForMenuOption () {
-        int chosenOption = scanner.nextInt();
+    public String promptUserInputForMenuOption () {
+        String chosenOption = scanner.next();
         return chosenOption;
     }
 

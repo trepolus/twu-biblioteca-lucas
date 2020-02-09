@@ -1,5 +1,7 @@
 package com.twu.biblioteca;
 
+import com.twu.service.LibraryService;
+import com.twu.service.LibraryServiceImpl;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +15,16 @@ import static org.hamcrest.core.Is.is;
 
 public class CLIOutputTest {
 
-    private CLI cli = null;
-    private ByteArrayOutputStream byteArrayOutputStream = null;
+    private CLI cli;
+    private ByteArrayOutputStream byteArrayOutputStream;
+    private LibraryService libraryService;
 
     @Before
     public void init() {
-        this.cli = new CLI();
+        this.libraryService = new LibraryServiceImpl();
+        libraryService.createAndFillLibraryWithBooks(null);
+
+        this.cli = new CLI(libraryService);
         this.byteArrayOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream));
 
@@ -35,7 +41,8 @@ public class CLIOutputTest {
     @Test
     public void shouldDisplayBookListOutput() throws Exception{
         //Redirect System.out to buffer
-        cli.printListOfBooks();
+        String libraryName = "TW Library";
+        cli.printListOfMediaEntities(libraryName);
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
@@ -58,7 +65,7 @@ public class CLIOutputTest {
 
     @Test
     public void shouldReturnRequiredMenuAction() throws IOException {
-        cli.doRequiredMenuAction(0);
+        cli.doRequiredMenuAction("0");
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
