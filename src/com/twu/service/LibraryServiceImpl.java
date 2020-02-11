@@ -72,7 +72,7 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     public List<MediaEntity> getAllMediaEntitiesByLibraryId(int id) {
-        Library library = getLibraryById(1);
+        Library library = getLibraryById(id);
         if (library != null) {
             return library.getMediaEntityList();
         }

@@ -42,7 +42,7 @@ public class CLIOutputTest {
     @Test
     public void shouldDisplayBookListOutput() throws Exception {
         //Redirect System.out to buffer
-        String libraryName = "TW Library";
+        int libraryName = 1;
         cli.printListOfMediaEntities(libraryName, false);
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
@@ -136,5 +136,72 @@ public class CLIOutputTest {
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("Please select a valid option!")
         ));
+    }
+
+    @Test
+    public void shouldDisplayMsgForCheckoutAndReturnBook() {
+        cli.checkoutBook("1");
+        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Thank you! Enjoy the book")
+        ));
+        cli.checkoutBook("1");
+        allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Sorry, that book is not available")
+        ));
+
+        cli.returnBook("trft78yg");
+        allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("This is not a valid option")
+        ));
+
+        cli.returnBook("1");
+        allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Thank you for returning the book")
+        ));
+
+        cli.returnBook("1");
+        allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("That is not a valid book to return")
+        ));
+
+        cli.returnBook("87239hfui3");
+        allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("This is not a valid option")
+        ));
+    }
+
+    @Test
+    public void shouldPrintListOfMediaEntities() {
+        cli.printListOfMediaEntities(1,false);
+
+        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                        containsString("Refactoring"),
+                        containsString("Unicorn Gorilla")
+                ));
+
+        //checkout Refactoring Book, should not be displayed now
+        libraryService.checkOutMediaEntityByIdFromLibraryById(1,1);
+
+        ByteArrayOutputStream byteArrayOutputStream2 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(byteArrayOutputStream2));
+        cli.printListOfMediaEntities(1,false);
+        allWrittenLines = new String(byteArrayOutputStream2.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.not(
+                containsString("Refactoring")
+        ));
+
+        ByteArrayOutputStream byteArrayOutputStream3 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(byteArrayOutputStream3));
+        cli.printListOfMediaEntities(1,true);
+        allWrittenLines = new String(byteArrayOutputStream3.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.containsString("Refactoring")
+        );
     }
 }

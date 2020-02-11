@@ -21,9 +21,18 @@ public class CLI {
         System.out.println();
     }
 
-    public void printListOfMediaEntities(String libraryName, boolean checkedOut) {
+    public void printMenu() {
+        System.out.println(" ------------------------ MENU ---------------------------");
+        System.out.println("|            Press 0 for: List of Books                   |");
+        System.out.println("|            Press 1 for: Renting Books                   |");
+        System.out.println("|            Press 2 for: Returning Books                 |");
+        System.out.println("|            Type exit for: Leaving the Application       |");
+        System.out.println(" ---------------------------------------------------------");
+    }
 
-        List<MediaEntity> mediaEntities = libraryService.getAllMediaEntitiesByLibraryName(libraryName);
+    public void printListOfMediaEntities(int libraryId, boolean checkedOut) {
+
+        List<MediaEntity> mediaEntities = libraryService.getAllMediaEntitiesByLibraryId(libraryId);
         System.out.println(" -----------------------------------------------------------------------------------");
         System.out.printf("|%10s |%30s  |%20s  |%15s|", "ID", "Title", "Author", "Year");
         System.out.println();
@@ -39,30 +48,44 @@ public class CLI {
         System.out.println(" -----------------------------------------------------------------------------------");
     }
 
-    public void printMenu() {
-        System.out.println(" ------------------------ MENU ---------------------------");
-        System.out.println("|            Press 0 for: List of Books                   |");
-        System.out.println("|            Press 1 for: Renting Books                   |");
-        System.out.println("|            Press 2 for: Returning Books                 |");
-        System.out.println("|            Type exit for: Leaving the Application       |");
-        System.out.println(" ---------------------------------------------------------");
+    public void startMenu() {
+        printWelcomeMsg();
+
+        int userDecision = 0;
+
+        while (userDecision > -2) {
+            printMenu();
+            String userInput = promptUserInputForMenuOption();
+            userDecision = doRequiredMenuAction(userInput);
+
+            if(userDecision == 1){
+                userInput = promptUserInputForMenuOption();
+                checkoutBook(userInput);
+            }
+            else if (userDecision == 2){
+                userInput = promptUserInputForMenuOption();
+                returnBook(userInput);
+            }
+        }
+    }
+
+    public String promptUserInputForMenuOption() {
+        return scanner.next();
     }
 
     public int doRequiredMenuAction(String chosenOption) {
         switch (chosenOption) {
             case "0":
-                printListOfMediaEntities("TW Library", false);
+                printListOfMediaEntities(1, false);
                 System.out.println();
                 return 0;
             case "1":
+                printListOfMediaEntities(1, false);
                 System.out.println("Select the id of the book you want to checkout:");
-                printListOfMediaEntities("TW Library", false);
-                System.out.println();
                 return 1;
             case "2":
+                printListOfMediaEntities(1, true);
                 System.out.println("Select the id of the book you want to return:");
-                printListOfMediaEntities("TW Library", true);
-                System.out.println();
                 return 2;
             case "exit":
                 System.out.println("Thanks for using our service. Good bye!");
@@ -103,31 +126,6 @@ public class CLI {
         }
         catch (NumberFormatException ex){
             System.out.println("This is not a valid option");
-        }
-    }
-
-    public String promptUserInputForMenuOption() {
-        return scanner.next();
-    }
-
-    public void startMenu() {
-        printWelcomeMsg();
-
-        int userDecision = 0;
-
-        while (userDecision > -2) {
-            printMenu();
-            String userInput = promptUserInputForMenuOption();
-            userDecision = doRequiredMenuAction(userInput);
-
-            if(userDecision == 1){
-                userInput = promptUserInputForMenuOption();
-                checkoutBook(userInput);
-            }
-            else if (userDecision == 2){
-                userInput = promptUserInputForMenuOption();
-                returnBook(userInput);
-            }
         }
     }
 }

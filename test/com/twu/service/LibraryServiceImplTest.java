@@ -78,6 +78,26 @@ public class LibraryServiceImplTest {
     }
 
     @Test
+    public void shouldReturnLibraryById() {
+        assertThat(libraryService.getLibraryById(2).getName(), is("Fantastic Library"));
+        assertThat(libraryService.getLibraryById(3).getName(), is("Old Library"));
+        assertThat(libraryService.getLibraryById(5), is(nullValue()));
+    }
+
+    @Test
+    public void getAllMediaEntitiesByLibraryId() {
+        List<MediaEntity> allMediaEntriesOfTWLibrary = libraryService.getAllMediaEntitiesByLibraryId(1);
+
+        MediaEntity mediaEntity1 = allMediaEntriesOfTWLibrary.get(0);
+        assertThat(mediaEntity1.getName(), is("Refactoring"));
+        assertThat(allMediaEntriesOfTWLibrary.size(), is(3));
+
+        List<MediaEntity> allMediaEntriesOfOldLibrary = libraryService.getAllMediaEntitiesByLibraryId(3);
+        assertThat(allMediaEntriesOfOldLibrary.isEmpty(), is(true));
+
+    }
+
+    @Test
     public void shouldReturnAllLibraries() {
         List<Library> allLibraries = libraryService.getAllLibraries();
 
