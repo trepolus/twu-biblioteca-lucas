@@ -3,14 +3,12 @@ package com.twu.entities;
 public abstract class MediaEntity {
 
     private String name;
-    private String author;
     private int year;
     private int id;
     private boolean checkedOut;
 
-    public MediaEntity(String name, String author, int year, int id) {
+    public MediaEntity(String name, int year, int id) {
         this.name = name;
-        this.author = author;
         this.year = year;
         this.id = id;
         this.checkedOut = false;
@@ -18,10 +16,6 @@ public abstract class MediaEntity {
 
     public String getName() {
         return name;
-    }
-
-    public String getAuthor() {
-        return author;
     }
 
     public int getYear() {

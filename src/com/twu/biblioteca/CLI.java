@@ -1,5 +1,6 @@
 package com.twu.biblioteca;
 
+import com.twu.entities.Book;
 import com.twu.entities.MediaEntity;
 import com.twu.service.LibraryService;
 
@@ -41,7 +42,7 @@ public class CLI {
             MediaEntity currentMediaEntity = (MediaEntity) mediaEntity;
 
             if(currentMediaEntity.isCheckedOut() == checkedOut) {
-                System.out.printf("|%10s |%30s  |%20s  |%15s|", ((MediaEntity) mediaEntity).getId(), ((MediaEntity) mediaEntity).getName(), ((MediaEntity) mediaEntity).getAuthor(), ((MediaEntity) mediaEntity).getYear());
+                System.out.printf("|%10s |%30s  |%20s  |%15s|", ((MediaEntity) mediaEntity).getId(), ((MediaEntity) mediaEntity).getName(), ((Book) mediaEntity).getAuthor(), ((MediaEntity) mediaEntity).getYear());
                 System.out.println();
             }
         }
