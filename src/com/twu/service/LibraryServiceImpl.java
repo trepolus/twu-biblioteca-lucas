@@ -1,13 +1,13 @@
 package com.twu.service;
 
-import com.twu.entities.Library;
 import com.twu.entities.Book;
+import com.twu.entities.Library;
 import com.twu.entities.MediaEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibraryServiceImpl implements LibraryService{
+public class LibraryServiceImpl implements LibraryService {
 
     private List<Library> libraryList;
 
@@ -18,7 +18,7 @@ public class LibraryServiceImpl implements LibraryService{
     @Override
     public Library createAndFillLibraryWithBooks(Library library) {
 
-        if (library == null){
+        if (library == null) {
             // create new books and add them to a new library
             ArrayList<MediaEntity> bookList = new ArrayList<>();
 
@@ -38,9 +38,9 @@ public class LibraryServiceImpl implements LibraryService{
 
     @Override
     public Library getLibraryByName(String name) {
-        if (!libraryList.isEmpty()){
-            for (Library library : libraryList){
-                if(library.getName().equals(name)){
+        if (!libraryList.isEmpty()) {
+            for (Library library : libraryList) {
+                if (library.getName().equals(name)) {
                     return library;
                 }
             }
@@ -60,9 +60,9 @@ public class LibraryServiceImpl implements LibraryService{
 
     @Override
     public Library getLibraryById(int id) {
-        if (!libraryList.isEmpty()){
-            for (Library library : libraryList){
-                if(library.getId() == id){
+        if (!libraryList.isEmpty()) {
+            for (Library library : libraryList) {
+                if (library.getId() == id) {
                     return library;
                 }
             }
@@ -73,7 +73,7 @@ public class LibraryServiceImpl implements LibraryService{
     @Override
     public List<MediaEntity> getAllMediaEntitiesByLibraryId(int id) {
         Library library = getLibraryById(1);
-        if (library != null){
+        if (library != null) {
             return library.getMediaEntityList();
         }
         return null;
@@ -87,14 +87,32 @@ public class LibraryServiceImpl implements LibraryService{
     @Override
     public boolean checkOutMediaEntityByIdFromLibraryById(int libraryId, int mediaEntityId) {
         List<MediaEntity> mediaEntityList = getAllMediaEntitiesByLibraryId(libraryId);
-        if (mediaEntityList != null && !mediaEntityList.isEmpty()){
-            for (Object mediaEntity : mediaEntityList){
+        if (mediaEntityList != null && !mediaEntityList.isEmpty()) {
+            for (Object mediaEntity : mediaEntityList) {
                 MediaEntity currentMediaEntity = (MediaEntity) mediaEntity;
                 int currentId = currentMediaEntity.getId();
 
                 //if the book could be found and is not yet checked out -> check it out
-                if (currentId == mediaEntityId && !currentMediaEntity.isCheckedOut()){
+                if (currentId == mediaEntityId && !currentMediaEntity.isCheckedOut()) {
                     currentMediaEntity.setCheckedOut(true);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean returnMediaEntityByIdToLibraryById(int libraryId, int mediaEntityId) {
+        List<MediaEntity> mediaEntityList = getAllMediaEntitiesByLibraryId(libraryId);
+        if (mediaEntityList != null && !mediaEntityList.isEmpty()) {
+            for (Object mediaEntity : mediaEntityList) {
+                MediaEntity currentMediaEntity = (MediaEntity) mediaEntity;
+                int currentId = currentMediaEntity.getId();
+
+                //if the book could be found and is not yet returned -> return it
+                if (currentId == mediaEntityId && currentMediaEntity.isCheckedOut()) {
+                    currentMediaEntity.setCheckedOut(false);
                     return true;
                 }
             }

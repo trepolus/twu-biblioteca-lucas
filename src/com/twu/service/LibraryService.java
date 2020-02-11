@@ -15,10 +15,11 @@ public interface LibraryService {
 
     Library getLibraryById(int id);
 
-
     List<MediaEntity> getAllMediaEntitiesByLibraryId(int id);
 
     List<Library> getAllLibraries();
 
     boolean checkOutMediaEntityByIdFromLibraryById(int libraryId, int mediaEntityId);
+
+    boolean returnMediaEntityByIdToLibraryById(int libraryId, int mediaEntityId);
 }

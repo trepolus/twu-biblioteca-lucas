@@ -21,45 +21,88 @@ public class CLI {
         System.out.println();
     }
 
-    public void printListOfMediaEntities(String libraryName) {
+    public void printListOfMediaEntities(String libraryName, boolean checkedOut) {
 
         List<MediaEntity> mediaEntities = libraryService.getAllMediaEntitiesByLibraryName(libraryName);
-        System.out.println(" ------------------------------------------------------------------");
-        System.out.printf("|%25s  |%20s  |%15s|", "Title", "Author", "Year");
+        System.out.println(" -----------------------------------------------------------------------------------");
+        System.out.printf("|%10s |%30s  |%20s  |%15s|", "ID", "Title", "Author", "Year");
         System.out.println();
-        System.out.println(" ------------------------------------------------------------------");
+        System.out.println(" -----------------------------------------------------------------------------------");
         for (Object mediaEntity : mediaEntities) {
-            System.out.printf("|%25s  |%20s  |%15s|", ((MediaEntity) mediaEntity).getName(), ((MediaEntity) mediaEntity).getAuthor(), ((MediaEntity) mediaEntity).getYear());
-            System.out.println();
+            MediaEntity currentMediaEntity = (MediaEntity) mediaEntity;
+
+            if(currentMediaEntity.isCheckedOut() == checkedOut) {
+                System.out.printf("|%10s |%30s  |%20s  |%15s|", ((MediaEntity) mediaEntity).getId(), ((MediaEntity) mediaEntity).getName(), ((MediaEntity) mediaEntity).getAuthor(), ((MediaEntity) mediaEntity).getYear());
+                System.out.println();
+            }
         }
-        System.out.println(" ------------------------------------------------------------------");
+        System.out.println(" -----------------------------------------------------------------------------------");
     }
 
     public void printMenu() {
         System.out.println(" ------------------------ MENU ---------------------------");
         System.out.println("|            Press 0 for: List of Books                   |");
-        System.out.println("|            Press 1 for: Rent Books                      |");
+        System.out.println("|            Press 1 for: Renting Books                   |");
+        System.out.println("|            Press 2 for: Returning Books                 |");
         System.out.println("|            Type exit for: Leaving the Application       |");
         System.out.println(" ---------------------------------------------------------");
     }
 
-    public boolean doRequiredMenuAction(String chosenOption) {
+    public int doRequiredMenuAction(String chosenOption) {
         switch (chosenOption) {
             case "0":
-                printListOfMediaEntities("TW Library");
+                printListOfMediaEntities("TW Library", false);
                 System.out.println();
-                return true;
+                return 0;
             case "1":
-                System.out.println("Book rented!");
+                System.out.println("Select the id of the book you want to checkout:");
+                printListOfMediaEntities("TW Library", false);
                 System.out.println();
-                return true;
+                return 1;
+            case "2":
+                System.out.println("Select the id of the book you want to return:");
+                printListOfMediaEntities("TW Library", true);
+                System.out.println();
+                return 2;
             case "exit":
                 System.out.println("Thanks for using our service. Good bye!");
-                return false;
+                return -2;
             default:
                 System.out.println("Please select a valid option!");
                 System.out.println();
-                return true;
+                return -1;
+        }
+    }
+
+    public void checkoutBook(String userInput){
+        try {
+            int selectedOption = Integer.parseInt(userInput);
+            boolean checkOutSuccessful = libraryService.checkOutMediaEntityByIdFromLibraryById(1, selectedOption);
+
+            if (checkOutSuccessful) {
+                System.out.println("Thank you! Enjoy the book");
+            } else {
+                System.out.println("Sorry, that book is not available");
+            }
+        }
+        catch (NumberFormatException ex){
+            System.out.println("This is not a valid option");
+        }
+    }
+
+    public void returnBook(String userInput){
+        try {
+            int selectedOption = Integer.parseInt(userInput);
+            boolean checkOutSuccessful = libraryService.returnMediaEntityByIdToLibraryById(1, selectedOption);
+
+            if (checkOutSuccessful) {
+                System.out.println("Thank you for returning the book");
+            } else {
+                System.out.println("That is not a valid book to return");
+            }
+        }
+        catch (NumberFormatException ex){
+            System.out.println("This is not a valid option");
         }
     }
 
@@ -70,13 +113,21 @@ public class CLI {
     public void startMenu() {
         printWelcomeMsg();
 
-        boolean continueToDisplayMenuOptions = true;
+        int userDecision = 0;
 
-        while (continueToDisplayMenuOptions) {
+        while (userDecision > -2) {
             printMenu();
             String userInput = promptUserInputForMenuOption();
-            continueToDisplayMenuOptions = doRequiredMenuAction(userInput);
+            userDecision = doRequiredMenuAction(userInput);
+
+            if(userDecision == 1){
+                userInput = promptUserInputForMenuOption();
+                checkoutBook(userInput);
+            }
+            else if (userDecision == 2){
+                userInput = promptUserInputForMenuOption();
+                returnBook(userInput);
+            }
         }
     }
-
 }

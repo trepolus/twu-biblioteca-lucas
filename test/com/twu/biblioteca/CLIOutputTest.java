@@ -6,7 +6,9 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +32,7 @@ public class CLIOutputTest {
     }
 
     @Test
-    public void shouldPrintWelcomeMsgToCli() throws Exception{
+    public void shouldPrintWelcomeMsgToCli() throws Exception {
         cli.printWelcomeMsg();
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
@@ -38,10 +40,10 @@ public class CLIOutputTest {
     }
 
     @Test
-    public void shouldDisplayBookListOutput() throws Exception{
+    public void shouldDisplayBookListOutput() throws Exception {
         //Redirect System.out to buffer
         String libraryName = "TW Library";
-        cli.printListOfMediaEntities(libraryName);
+        cli.printListOfMediaEntities(libraryName, false);
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
@@ -61,16 +63,16 @@ public class CLIOutputTest {
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("Press 0 for: List of Books"),
-                containsString("Press 1 for: Rent Book")
+                containsString("Press 1 for: Renting Books")
         ));
     }
 
     @Test
     public void zeroShouldReturnRequiredMenuAction() throws IOException {
 
-        boolean zeroShouldReturnTrue = cli.doRequiredMenuAction("0");
+        int zeroShouldReturnZero = cli.doRequiredMenuAction("0");
 
-        assertThat(zeroShouldReturnTrue, is(true));
+        assertThat(zeroShouldReturnZero, is(0));
 
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
@@ -85,10 +87,36 @@ public class CLIOutputTest {
     }
 
     @Test
-    public void shouldTriggerExitMenuAction() throws IOException {
-        boolean zeroShouldReturnTrue = cli.doRequiredMenuAction("exit");
+    public void oneShouldLeadToCheckoutPrompt() throws IOException {
+        int oneShouldReturnOne = cli.doRequiredMenuAction("1");
 
-        assertThat(zeroShouldReturnTrue, is(false));
+        assertThat(oneShouldReturnOne, is(1));
+
+        byteArrayOutputStream.flush();
+        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Select the id of the book you want to checkout:")
+        ));
+    }
+
+    @Test
+    public void twoShouldLeadToReturnPrompt() throws IOException {
+        int twoShouldReturnTwo = cli.doRequiredMenuAction("2");
+
+        assertThat(twoShouldReturnTwo, is(2));
+
+        byteArrayOutputStream.flush();
+        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Select the id of the book you want to return:")
+        ));
+    }
+
+    @Test
+    public void shouldTriggerExitMenuAction() throws IOException {
+        int exitShouldReturnMinus2 = cli.doRequiredMenuAction("exit");
+
+        assertThat(exitShouldReturnMinus2, is(-2));
 
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
@@ -99,9 +127,9 @@ public class CLIOutputTest {
 
     @Test
     public void wrongInputShouldTriggerWarning() throws IOException {
-        boolean zeroShouldReturnTrue = cli.doRequiredMenuAction("349f883eOIWRJNVWPOKSN@");
+        int wrongInputShouldReturnMinusOne = cli.doRequiredMenuAction("349f883eOIWRJNVWPOKSN@");
 
-        assertThat(zeroShouldReturnTrue, is(true));
+        assertThat(wrongInputShouldReturnMinusOne, is(-1));
 
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());

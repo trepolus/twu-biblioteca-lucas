@@ -13,6 +13,7 @@ public abstract class MediaEntity {
         this.author = author;
         this.year = year;
         this.id = id;
+        this.checkedOut = false;
     }
 
     public String getName() {
@@ -31,7 +32,7 @@ public abstract class MediaEntity {
         return id;
     }
 
-    public boolean isCheckedOut(){
+    public boolean isCheckedOut() {
         return checkedOut;
     }
 
