@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.Scanner;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +34,7 @@ public class CLIOutputTest {
         cli.printWelcomeMsg();
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
-        assertThat(allWrittenLines, is("Welcome to Biblioteca. Your one-stop shop for great book titles in Bangalore!\n"));
+        assertThat(allWrittenLines, is("Welcome to Biblioteca. Your one-stop shop for great book titles in Bangalore!\n\n"));
     }
 
     @Test
@@ -46,7 +45,10 @@ public class CLIOutputTest {
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
-                containsString("Life is good | Unicorn Gorilla | 2019"),
+                containsString("Life is good"),
+                containsString("Unicorn Gorilla"),
+                containsString("2019"),
+                containsString("|"),
                 containsString("Fowler"),
                 containsString("2026")
         ));
@@ -64,14 +66,47 @@ public class CLIOutputTest {
     }
 
     @Test
-    public void shouldReturnRequiredMenuAction() throws IOException {
-        cli.doRequiredMenuAction("0");
+    public void zeroShouldReturnRequiredMenuAction() throws IOException {
+
+        boolean zeroShouldReturnTrue = cli.doRequiredMenuAction("0");
+
+        assertThat(zeroShouldReturnTrue, is(true));
+
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
-                containsString("Life is good | Unicorn Gorilla | 2019"),
+                containsString("Life is good"),
+                containsString("Unicorn Gorilla"),
+                containsString("2019"),
+                containsString("|"),
                 containsString("Fowler"),
                 containsString("2026")
+        ));
+    }
+
+    @Test
+    public void shouldTriggerExitMenuAction() throws IOException {
+        boolean zeroShouldReturnTrue = cli.doRequiredMenuAction("exit");
+
+        assertThat(zeroShouldReturnTrue, is(false));
+
+        byteArrayOutputStream.flush();
+        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Thanks for using our service. Good bye!")
+        ));
+    }
+
+    @Test
+    public void wrongInputShouldTriggerWarning() throws IOException {
+        boolean zeroShouldReturnTrue = cli.doRequiredMenuAction("349f883eOIWRJNVWPOKSN@");
+
+        assertThat(zeroShouldReturnTrue, is(true));
+
+        byteArrayOutputStream.flush();
+        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
+        assertThat(allWrittenLines, CoreMatchers.allOf(
+                containsString("Please select a valid option!")
         ));
     }
 }

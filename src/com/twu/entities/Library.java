@@ -8,15 +8,18 @@ public class Library {
 
     private List<MediaEntity> mediaEntityList;
     private String name;
+    private int id;
 
-    public Library(List<MediaEntity> mediaEntityList, String name) {
+    public Library(List<MediaEntity> mediaEntityList, String name, int id) {
         this.mediaEntityList = mediaEntityList;
         this.name = name;
+        this.id = id;
     }
 
-    public Library(String name) {
+    public Library(String name, int id) {
         this.mediaEntityList = new ArrayList<>();
         this.name = name;
+        this.id = id;
     }
 
     public List<MediaEntity> getMediaEntityList() {
@@ -27,17 +30,7 @@ public class Library {
         return name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Library library = (Library) o;
-        return Objects.equals(mediaEntityList, library.mediaEntityList) &&
-                Objects.equals(name, library.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(mediaEntityList, name);
+    public int getId() {
+        return id;
     }
 }
