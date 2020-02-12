@@ -1,10 +1,8 @@
 package com.twu.biblioteca;
 
-import com.twu.gui.BookCLI;
-import com.twu.gui.MovieCLI;
+import com.twu.gui.CLI;
 import com.twu.service.LibraryService;
 import com.twu.service.LibraryServiceImpl;
-import groovy.json.internal.IO;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +17,7 @@ import static org.hamcrest.core.Is.is;
 
 public class MovieCLIOutputTest {
 
-    private MovieCLI movieCLI;
+    private CLI cli;
     private ByteArrayOutputStream byteArrayOutputStream;
     private LibraryService libraryService;
 
@@ -28,23 +26,14 @@ public class MovieCLIOutputTest {
         this.libraryService = new LibraryServiceImpl();
         libraryService.createAndFillLibraryWithMovies(null);
 
-        this.movieCLI = new MovieCLI(libraryService);
+        this.cli = new CLI();
         this.byteArrayOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream));
     }
 
     @Test
-    public void shouldPrintWelcomeMsgToCli() throws IOException {
-        movieCLI.printWelcomeMsg();
-        byteArrayOutputStream.flush();
-        String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
-        assertThat(allWrittenLines, is("Welcome to Biblioteca Movies. Your one-stop shop for great movie titles in Bangalore!\n\n"));
-    }
-
-    @Test
     public void shouldPrintListOfMediaEntities() throws IOException {
-        int libraryId = 1;
-        movieCLI.printListOfMediaEntities(libraryId, false);
+        cli.printListOfMovies(libraryService.getAllMediaEntitiesByLibraryId(1), false);
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(

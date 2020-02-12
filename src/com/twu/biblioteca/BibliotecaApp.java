@@ -1,16 +1,13 @@
 package com.twu.biblioteca;
 
-import com.twu.gui.BookCLI;
-import com.twu.service.LibraryService;
-import com.twu.service.LibraryServiceImpl;
+import com.twu.gui.MenuService;
+import com.twu.gui.MenuServiceImpl;
 
 public class BibliotecaApp {
 
     public static void main(String[] args) {
-        LibraryService libraryService = new LibraryServiceImpl();
-        libraryService.createAndFillLibraryWithBooks(null);
+        MenuService bibliotecaProgram = new MenuServiceImpl();
 
-        BookCLI bookCli = new BookCLI(libraryService);
-        bookCli.startMenu();
+        bibliotecaProgram.startBiblioteca();
     }
 }
