@@ -9,6 +9,8 @@ public interface LibraryService {
 
     Library createAndFillLibraryWithBooks(Library library);
 
+    Library createAndFillLibraryWithMovies(Library library);
+
     Library getLibraryByName(String name);
 
     List<MediaEntity> getAllMediaEntitiesByLibraryName(String name);

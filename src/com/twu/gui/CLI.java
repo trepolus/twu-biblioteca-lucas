@@ -30,4 +30,6 @@ public abstract class CLI {
     public void checkoutMediaEntity(String userInput) {}
 
     public void returnMediaEntity(String userInput) {}
+
+    public void startMenu() {}
 }

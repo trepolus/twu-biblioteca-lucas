@@ -1,5 +1,6 @@
 package com.twu.biblioteca;
 
+import com.twu.gui.BookCLI;
 import com.twu.service.LibraryService;
 import com.twu.service.LibraryServiceImpl;
 
@@ -9,7 +10,7 @@ public class BibliotecaApp {
         LibraryService libraryService = new LibraryServiceImpl();
         libraryService.createAndFillLibraryWithBooks(null);
 
-        CLI cli = new CLI(libraryService);
-        cli.startMenu();
+        BookCLI bookCli = new BookCLI(libraryService);
+        bookCli.startMenu();
     }
 }

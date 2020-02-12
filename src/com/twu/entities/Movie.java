@@ -15,7 +15,10 @@ public class Movie extends MediaEntity{
         return director;
     }
 
-    public int getRating() {
-        return rating;
+    public String getRating() {
+        if (rating <= 0 || rating > 10){
+            return "unrated";
+        }
+        return "" + rating;
     }
 }

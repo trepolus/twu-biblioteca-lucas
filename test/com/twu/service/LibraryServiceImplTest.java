@@ -3,6 +3,7 @@ package com.twu.service;
 import com.twu.entities.Book;
 import com.twu.entities.Library;
 import com.twu.entities.MediaEntity;
+import com.twu.entities.Movie;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +44,30 @@ public class LibraryServiceImplTest {
         String nameOfTestBook2 = libraryToTest.getMediaEntityList().get(1).getName();
 
         assertThat(nameOfTestBook2, is(book2.getName()));
+
+    }
+
+    @Test
+    public void shouldCreateAndFillLibraryWithMoviesAndReturnIt() {
+        Library libraryToTest = libraryService.createAndFillLibraryWithMovies(null);
+
+        ArrayList<MediaEntity> mockMovieList = new ArrayList<>();
+
+        Movie movie1 = new Movie(1,"Pulp Fiction", 1994, "Quentin Tarantino", 10);
+        Movie movie2 = new Movie(2,"Inglorious Basterds", 2009, "Quentin Tarantino", 9);
+        Movie movie3 = new Movie(3,"Sharknado 6", 2018, "Anthony Ferrante", 2);
+
+        mockMovieList.add(movie1);
+        mockMovieList.add(movie2);
+        mockMovieList.add(movie3);
+
+        Library mockLibrary = new Library(mockMovieList, "Movie Library", 1);
+
+        assertThat(libraryToTest.getName(), is(mockLibrary.getName()));
+
+        String nameOfTestMovie2 = libraryToTest.getMediaEntityList().get(1).getName();
+
+        assertThat(nameOfTestMovie2, is(movie2.getName()));
 
     }
 

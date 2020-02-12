@@ -1,6 +1,6 @@
 package com.twu.biblioteca;
 
-import com.twu.gui.CLI;
+import com.twu.gui.BookCLI;
 import com.twu.service.LibraryService;
 import com.twu.service.LibraryServiceImpl;
 import org.hamcrest.CoreMatchers;
@@ -15,9 +15,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class CLIOutputTest {
+public class BookCLIOutputTest {
 
-    private CLI cli;
+    private BookCLI bookCli;
     private ByteArrayOutputStream byteArrayOutputStream;
     private LibraryService libraryService;
 
@@ -26,7 +26,7 @@ public class CLIOutputTest {
         this.libraryService = new LibraryServiceImpl();
         libraryService.createAndFillLibraryWithBooks(null);
 
-        this.cli = new CLI(libraryService);
+        this.bookCli = new BookCLI(libraryService);
         this.byteArrayOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream));
 
@@ -34,7 +34,7 @@ public class CLIOutputTest {
 
     @Test
     public void shouldPrintWelcomeMsgToCli() throws Exception {
-        cli.printWelcomeMsg();
+        bookCli.printWelcomeMsg();
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, is("Welcome to Biblioteca. Your one-stop shop for great book titles in Bangalore!\n\n"));
@@ -43,8 +43,8 @@ public class CLIOutputTest {
     @Test
     public void shouldDisplayBookListOutput() throws Exception {
         //Redirect System.out to buffer
-        int libraryName = 1;
-        cli.printListOfMediaEntities(libraryName, false);
+        int libraryId = 1;
+        bookCli.printListOfMediaEntities(libraryId, false);
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
@@ -59,7 +59,7 @@ public class CLIOutputTest {
 
     @Test
     public void shouldDisplayMenuAfterWelcomeMsg() throws IOException {
-        cli.printMenu();
+        bookCli.printMenu();
         byteArrayOutputStream.flush();
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
@@ -71,7 +71,7 @@ public class CLIOutputTest {
     @Test
     public void zeroShouldReturnRequiredMenuAction() throws IOException {
 
-        int zeroShouldReturnZero = cli.doRequiredMenuAction("0");
+        int zeroShouldReturnZero = bookCli.doRequiredMenuAction("0");
 
         assertThat(zeroShouldReturnZero, is(0));
 
@@ -89,7 +89,7 @@ public class CLIOutputTest {
 
     @Test
     public void oneShouldLeadToCheckoutPrompt() throws IOException {
-        int oneShouldReturnOne = cli.doRequiredMenuAction("1");
+        int oneShouldReturnOne = bookCli.doRequiredMenuAction("1");
 
         assertThat(oneShouldReturnOne, is(1));
 
@@ -102,7 +102,7 @@ public class CLIOutputTest {
 
     @Test
     public void twoShouldLeadToReturnPrompt() throws IOException {
-        int twoShouldReturnTwo = cli.doRequiredMenuAction("2");
+        int twoShouldReturnTwo = bookCli.doRequiredMenuAction("2");
 
         assertThat(twoShouldReturnTwo, is(2));
 
@@ -115,7 +115,7 @@ public class CLIOutputTest {
 
     @Test
     public void shouldTriggerExitMenuAction() throws IOException {
-        int exitShouldReturnMinus2 = cli.doRequiredMenuAction("exit");
+        int exitShouldReturnMinus2 = bookCli.doRequiredMenuAction("exit");
 
         assertThat(exitShouldReturnMinus2, is(-2));
 
@@ -128,7 +128,7 @@ public class CLIOutputTest {
 
     @Test
     public void wrongInputShouldTriggerWarning() throws IOException {
-        int wrongInputShouldReturnMinusOne = cli.doRequiredMenuAction("349f883eOIWRJNVWPOKSN@");
+        int wrongInputShouldReturnMinusOne = bookCli.doRequiredMenuAction("349f883eOIWRJNVWPOKSN@");
 
         assertThat(wrongInputShouldReturnMinusOne, is(-1));
 
@@ -141,36 +141,36 @@ public class CLIOutputTest {
 
     @Test
     public void shouldDisplayMsgForCheckoutAndReturnBook() {
-        cli.checkoutBook("1");
+        bookCli.checkoutMediaEntity("1");
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("Thank you! Enjoy the book")
         ));
-        cli.checkoutBook("1");
+        bookCli.checkoutMediaEntity("1");
         allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("Sorry, that book is not available")
         ));
 
-        cli.returnBook("trft78yg");
+        bookCli.returnMediaEntity("trft78yg");
         allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("This is not a valid option")
         ));
 
-        cli.returnBook("1");
+        bookCli.returnMediaEntity("1");
         allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("Thank you for returning the book")
         ));
 
-        cli.returnBook("1");
+        bookCli.returnMediaEntity("1");
         allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("That is not a valid book to return")
         ));
 
-        cli.returnBook("87239hfui3");
+        bookCli.returnMediaEntity("87239hfui3");
         allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
                 containsString("This is not a valid option")
@@ -179,7 +179,7 @@ public class CLIOutputTest {
 
     @Test
     public void shouldPrintListOfMediaEntities() {
-        cli.printListOfMediaEntities(1,false);
+        bookCli.printListOfMediaEntities(1,false);
 
         String allWrittenLines = new String(byteArrayOutputStream.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.allOf(
@@ -192,7 +192,7 @@ public class CLIOutputTest {
 
         ByteArrayOutputStream byteArrayOutputStream2 = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream2));
-        cli.printListOfMediaEntities(1,false);
+        bookCli.printListOfMediaEntities(1,false);
         allWrittenLines = new String(byteArrayOutputStream2.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.not(
                 containsString("Refactoring")
@@ -200,7 +200,7 @@ public class CLIOutputTest {
 
         ByteArrayOutputStream byteArrayOutputStream3 = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream3));
-        cli.printListOfMediaEntities(1,true);
+        bookCli.printListOfMediaEntities(1,true);
         allWrittenLines = new String(byteArrayOutputStream3.toByteArray());
         assertThat(allWrittenLines, CoreMatchers.containsString("Refactoring")
         );

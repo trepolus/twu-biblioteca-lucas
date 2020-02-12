@@ -5,16 +5,11 @@ import com.twu.entities.MediaEntity;
 import com.twu.service.LibraryService;
 
 import java.util.List;
-import java.util.Scanner;
 
-public class CLI {
+public class BookCLI extends CLI{
 
-    private LibraryService libraryService;
-    private final Scanner scanner;
-
-    public CLI(LibraryService libraryService) {
-        this.libraryService = libraryService;
-        this.scanner = new Scanner(System.in);
+    public BookCLI(LibraryService libraryService) {
+        super(libraryService);
     }
 
     public void printWelcomeMsg() {
@@ -61,17 +56,13 @@ public class CLI {
 
             if(userDecision == 1){
                 userInput = promptUserInputForMenuOption();
-                checkoutBook(userInput);
+                checkoutMediaEntity(userInput);
             }
             else if (userDecision == 2){
                 userInput = promptUserInputForMenuOption();
-                returnBook(userInput);
+                returnMediaEntity(userInput);
             }
         }
-    }
-
-    public String promptUserInputForMenuOption() {
-        return scanner.next();
     }
 
     public int doRequiredMenuAction(String chosenOption) {
@@ -98,7 +89,7 @@ public class CLI {
         }
     }
 
-    public void checkoutBook(String userInput){
+    public void checkoutMediaEntity(String userInput){
         try {
             int selectedOption = Integer.parseInt(userInput);
             boolean checkOutSuccessful = libraryService.checkOutMediaEntityByIdFromLibraryById(1, selectedOption);
@@ -114,7 +105,7 @@ public class CLI {
         }
     }
 
-    public void returnBook(String userInput){
+    public void returnMediaEntity(String userInput){
         try {
             int selectedOption = Integer.parseInt(userInput);
             boolean checkOutSuccessful = libraryService.returnMediaEntityByIdToLibraryById(1, selectedOption);

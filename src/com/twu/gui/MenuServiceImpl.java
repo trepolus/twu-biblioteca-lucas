@@ -1,11 +1,12 @@
-package com.twu.service;
+package com.twu.gui;
 
-import com.twu.biblioteca.CLI;
+import com.twu.service.LibraryService;
+import com.twu.service.LibraryServiceImpl;
 
 public class MenuServiceImpl implements MenuService {
 
-    private CLI bookCLI;
-    private CLI movieCLI;
+    private BookCLI bookCLI;
+    private BookCLI movieBookCLI;
     private LibraryService bookLibraryService;
     private LibraryService movieLibraryService;
 
@@ -13,11 +14,11 @@ public class MenuServiceImpl implements MenuService {
         //initialize Biblioteca Books
         this.bookLibraryService = new LibraryServiceImpl();
         this.bookLibraryService.createAndFillLibraryWithBooks(null);
-        this.bookCLI = new CLI(bookLibraryService);
+        this.bookCLI = new BookCLI(bookLibraryService);
 
         //initialize Biblioteca Movies
         this.movieLibraryService = new LibraryServiceImpl();
-        this.movieCLI = new CLI(movieLibraryService);
+        this.movieBookCLI = new BookCLI(movieLibraryService);
     }
 
     @Override
