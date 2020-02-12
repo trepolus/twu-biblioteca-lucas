@@ -1,4 +1,4 @@
-package com.twu.biblioteca;
+package com.twu.gui;
 
 import com.twu.entities.Book;
 import com.twu.entities.MediaEntity;
