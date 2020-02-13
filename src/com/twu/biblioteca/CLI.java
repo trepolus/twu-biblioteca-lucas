@@ -1,4 +1,4 @@
-package com.twu.gui;
+package com.twu.biblioteca;
 
 import com.twu.entities.Book;
 import com.twu.entities.MediaEntity;
@@ -86,7 +86,21 @@ public class CLI {
         System.out.println(" ---------------------------------------------------------");
     }
 
-    public void printMovieMenuOfLoggedInUser (String userLibraryNumber){
+    public void printLoginMenu() {
+        System.out.println(" --------------------- LOGIN MENU ------------------------");
+    }
+
+    public String promptForLibraryNumber() {
+        System.out.print("library number: ");
+        return promptUserInputForMenuOption();
+    }
+
+    public String promptForPassword() {
+        System.out.print("password: ");
+        return promptUserInputForMenuOption();
+    }
+
+    public void printMovieMenuOfLoggedInUser(String userLibraryNumber) {
         System.out.println(" --------------------- Movie MENU ------------------------");
         System.out.println("|            Press 0 for: List of Movies                  |");
         System.out.println("|            Press 1 for: Renting Movies                  |");

@@ -21,7 +21,7 @@ public interface LibraryService {
 
     List<Library> getAllLibraries();
 
-    boolean checkOutMediaEntityByIdFromLibraryById(int libraryId, int mediaEntityId);
+    boolean checkOutMediaEntityByIdFromLibraryById(int libraryId, int mediaEntityId, String userId);
 
-    boolean returnMediaEntityByIdToLibraryById(int libraryId, int mediaEntityId);
+    boolean returnMediaEntityByIdToLibraryById(int libraryId, int mediaEntityId, String userId);
 }

@@ -1,6 +1,5 @@
 package com.twu.biblioteca;
 
-import com.twu.gui.CLI;
 import com.twu.service.LibraryService;
 import com.twu.service.LibraryServiceImpl;
 import org.hamcrest.CoreMatchers;
@@ -13,7 +12,6 @@ import java.io.PrintStream;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 public class MovieCLIOutputTest {
 

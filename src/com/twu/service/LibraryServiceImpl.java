@@ -6,14 +6,18 @@ import com.twu.entities.MediaEntity;
 import com.twu.entities.Movie;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LibraryServiceImpl implements LibraryService {
 
     private List<Library> libraryList;
+    private Map<Integer, String> mediaEntityReservations;
 
     public LibraryServiceImpl() {
-        libraryList = new ArrayList<>();
+        this.libraryList = new ArrayList<>();
+        this.mediaEntityReservations = new HashMap<>();
     }
 
     @Override
@@ -117,7 +121,7 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public boolean checkOutMediaEntityByIdFromLibraryById(int libraryId, int mediaEntityId) {
+    public boolean checkOutMediaEntityByIdFromLibraryById(int libraryId, int mediaEntityId, String userId) {
         List<MediaEntity> mediaEntityList = getAllMediaEntitiesByLibraryId(libraryId);
         if (mediaEntityList != null && !mediaEntityList.isEmpty()) {
             for (Object mediaEntity : mediaEntityList) {
@@ -127,6 +131,7 @@ public class LibraryServiceImpl implements LibraryService {
                 //if the book could be found and is not yet checked out -> check it out
                 if (currentId == mediaEntityId && !currentMediaEntity.isCheckedOut()) {
                     currentMediaEntity.setCheckedOut(true);
+                    mediaEntityReservations.put(mediaEntityId, userId);
                     return true;
                 }
             }
@@ -135,7 +140,7 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public boolean returnMediaEntityByIdToLibraryById(int libraryId, int mediaEntityId) {
+    public boolean returnMediaEntityByIdToLibraryById(int libraryId, int mediaEntityId, String userId) {
         List<MediaEntity> mediaEntityList = getAllMediaEntitiesByLibraryId(libraryId);
         if (mediaEntityList != null && !mediaEntityList.isEmpty()) {
             for (Object mediaEntity : mediaEntityList) {
@@ -145,6 +150,7 @@ public class LibraryServiceImpl implements LibraryService {
                 //if the book could be found and is not yet returned -> return it
                 if (currentId == mediaEntityId && currentMediaEntity.isCheckedOut()) {
                     currentMediaEntity.setCheckedOut(false);
+                    mediaEntityReservations.remove(mediaEntityId);
                     return true;
                 }
             }

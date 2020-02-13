@@ -1,8 +1,5 @@
 package com.twu.biblioteca;
 
-import com.twu.gui.CLI;
-import com.twu.gui.MenuService;
-import com.twu.gui.MenuServiceImpl;
 import com.twu.service.LibraryService;
 import com.twu.service.LibraryServiceImpl;
 import org.hamcrest.CoreMatchers;

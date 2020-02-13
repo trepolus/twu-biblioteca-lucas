@@ -134,12 +134,12 @@ public class LibraryServiceImplTest {
 
     @Test
     public void shouldCheckoutMediaEntity() {
-        boolean checkoutMediaEntity = libraryService.checkOutMediaEntityByIdFromLibraryById(1, 1);
+        boolean checkoutMediaEntity = libraryService.checkOutMediaEntityByIdFromLibraryById(1, 1, "noUser");
 
         //should set checkout value to true, entity should now be checked out
         assertThat(checkoutMediaEntity, is(true));
 
-        checkoutMediaEntity = libraryService.checkOutMediaEntityByIdFromLibraryById(1, 1);
+        checkoutMediaEntity = libraryService.checkOutMediaEntityByIdFromLibraryById(1, 1, "noUser");
         //entity should already be checked out
         assertThat(checkoutMediaEntity, is(false));
     }
@@ -147,15 +147,15 @@ public class LibraryServiceImplTest {
     @Test
     public void shouldReturnMediaEntity() {
         //first checkout book
-        libraryService.checkOutMediaEntityByIdFromLibraryById(1, 1);
+        libraryService.checkOutMediaEntityByIdFromLibraryById(1, 1, "noUser");
 
         //then return it
-        boolean returnMediaEntity = libraryService.returnMediaEntityByIdToLibraryById(1, 1);
+        boolean returnMediaEntity = libraryService.returnMediaEntityByIdToLibraryById(1, 1, "noUser");
 
         //should set checkout value to false, returnMediaEntity should therefore return true
         assertThat(returnMediaEntity, is(true));
 
-        returnMediaEntity = libraryService.returnMediaEntityByIdToLibraryById(1, 1);
+        returnMediaEntity = libraryService.returnMediaEntityByIdToLibraryById(1, 1, "noUser");
         //entity should already be returned, method should return false
         assertThat(returnMediaEntity, is(false));
     }

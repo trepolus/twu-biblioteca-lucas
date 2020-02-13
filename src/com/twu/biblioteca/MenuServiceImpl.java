@@ -1,8 +1,13 @@
-package com.twu.gui;
+package com.twu.biblioteca;
 
+import com.twu.authentication.LoginService;
+import com.twu.authentication.LoginServiceImpl;
 import com.twu.entities.MediaEntity;
+import com.twu.entities.User;
 import com.twu.service.LibraryService;
 import com.twu.service.LibraryServiceImpl;
+import com.twu.service.UserService;
+import com.twu.service.UserServiceImpl;
 
 import java.util.List;
 
@@ -11,8 +16,11 @@ public class MenuServiceImpl implements MenuService {
     private CLI cli;
     private LibraryService bookLibraryService;
     private LibraryService movieLibraryService;
+    private UserService userService;
+    private LoginService loginService;
     private final String bookMediaEntityName = "book";
     private final String movieMediaEntityName = "movie";
+    private User currentUser;
 
 
     public MenuServiceImpl() {
@@ -24,8 +32,17 @@ public class MenuServiceImpl implements MenuService {
         this.movieLibraryService = new LibraryServiceImpl();
         this.movieLibraryService.createAndFillLibraryWithMovies(null);
 
+        //initialize Users
+        this.userService = new UserServiceImpl();
+
+        //initialize login Authentification
+        this.loginService = new LoginServiceImpl();
+
         //initialize CLI
         this.cli = new CLI();
+
+        //initialize currentUser
+        this.currentUser = null;
     }
 
     @Override
@@ -54,7 +71,7 @@ public class MenuServiceImpl implements MenuService {
                 checkoutMediaEntity(userInput, bookLibraryService, bookMediaEntityName);
             } else if (userDecision == 2) {
                 userInput = cli.promptUserInputForMenuOption();
-                returnMediaEntity(userInput, bookLibraryService, bookMediaEntityName);
+                returnMediaEntity(userInput, bookLibraryService, movieMediaEntityName);
             }
         }
     }
@@ -88,7 +105,7 @@ public class MenuServiceImpl implements MenuService {
     public void checkoutMediaEntity(String userInput, LibraryService libraryService, String mediaEntityType){
         try {
             int selectedOption = Integer.parseInt(userInput);
-            boolean checkOutSuccessful = libraryService.checkOutMediaEntityByIdFromLibraryById(1, selectedOption);
+            boolean checkOutSuccessful = libraryService.checkOutMediaEntityByIdFromLibraryById(1, selectedOption, "noUser");
 
             if (checkOutSuccessful) {
                 cli.printSuccesfulRental(mediaEntityType);
@@ -104,7 +121,7 @@ public class MenuServiceImpl implements MenuService {
     public void returnMediaEntity(String userInput, LibraryService libraryService, String mediaEntityType){
         try {
             int selectedOption = Integer.parseInt(userInput);
-            boolean checkOutSuccessful = libraryService.returnMediaEntityByIdToLibraryById(1, selectedOption);
+            boolean checkOutSuccessful = libraryService.returnMediaEntityByIdToLibraryById(1, selectedOption, "noUser");
 
             if (checkOutSuccessful) {
                 cli.printSuccesfulReturn(mediaEntityType);
@@ -130,7 +147,7 @@ public class MenuServiceImpl implements MenuService {
                     cli.printListOfMovies(movieLibraryService.getAllMediaEntitiesByLibraryId(1), false);
                     break;
                 case "login":
-                    System.out.println("Login functionality not yet implemented :(");
+                    startLoginMenu();
                     break;
                 case "exit":
                     cli.printThanksGoodbye();
@@ -139,5 +156,11 @@ public class MenuServiceImpl implements MenuService {
                     cli.printNotAValidOption();
             }
         }
+    }
+
+    private void startLoginMenu() {
+        cli.printLoginMenu();
+        String libraryId = cli.promptForLibraryNumber();
+        String password = cli.promptForPassword();
     }
 }
