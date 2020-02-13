@@ -9,6 +9,7 @@ public class Movie extends MediaEntity{
         super(name, year, id);
         this.rating = rating;
         this.director = director;
+
     }
 
     public String getDirector() {

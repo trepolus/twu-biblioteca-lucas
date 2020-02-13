@@ -66,7 +66,7 @@ public class MenuServiceImpl implements MenuService {
                 checkoutMediaEntity(userInput, bookLibraryService, bookMediaEntityName);
             } else if (userDecision == 2) {
                 userInput = cli.promptUserInputForMenuOption();
-                returnMediaEntity(userInput, movieLibraryService, movieMediaEntityName);
+                returnMediaEntity(userInput, bookLibraryService, bookMediaEntityName);
             }
         }
     }
