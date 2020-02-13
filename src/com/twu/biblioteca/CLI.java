@@ -3,6 +3,7 @@ package com.twu.biblioteca;
 import com.twu.entities.Book;
 import com.twu.entities.MediaEntity;
 import com.twu.entities.Movie;
+import com.twu.entities.User;
 
 import java.util.List;
 import java.util.Scanner;
@@ -90,6 +91,14 @@ public class CLI {
         System.out.println(" --------------------- LOGIN MENU ------------------------");
     }
 
+    public void loginSuccessful() {
+        System.out.println("Login successful!");
+    }
+
+    public void loginFailed() {
+        System.out.println("Login failed!");
+    }
+
     public String promptForLibraryNumber() {
         System.out.print("library number: ");
         return promptUserInputForMenuOption();
@@ -108,8 +117,8 @@ public class CLI {
         System.out.println("|            Press 3 for: User Information                |");
         System.out.println("|            Type exit for: Leaving the Application       |");
         System.out.println("|                                                         |");
+        System.out.printf("|            Logged in as user: %8s                  |", userLibraryNumber);
         System.out.println();
-        System.out.printf("|            Logged in as user: %s       |", userLibraryNumber);
         System.out.println(" ---------------------------------------------------------");
     }
 
@@ -123,7 +132,7 @@ public class CLI {
         for (Object mediaEntity : mediaEntities) {
             MediaEntity currentMediaEntity = (MediaEntity) mediaEntity;
 
-            if(currentMediaEntity.isCheckedOut() == checkedOut) {
+            if (currentMediaEntity.isCheckedOut() == checkedOut) {
                 System.out.printf("|%10s |%40s  |%15s  |%30s  |%10s|", ((MediaEntity) mediaEntity).getId(), ((MediaEntity) mediaEntity).getName(), ((MediaEntity) mediaEntity).getYear(), ((Movie) mediaEntity).getDirector(), ((Movie) mediaEntity).getRating());
                 System.out.println();
             }
@@ -131,17 +140,27 @@ public class CLI {
         System.out.println(longLine);
     }
 
-    public void printRequestForCheckout(String typeOfMediaEntity){
+    public void printUserInformation(User loggedInUser) {
+        System.out.println(" ---------------------  USER INFO ------------------------");
+        System.out.printf("|   ID      |            %s                               \n", loggedInUser.getLibraryId());
+        System.out.printf("|   NAME    |            %s                              \n", loggedInUser.getName());
+        System.out.printf("|   EMAIL   |            %s                              \n", loggedInUser.getEmail());
+        System.out.printf("|   PHONE   |            %s                              \n", loggedInUser.getPhoneNumber());
+        System.out.println(" ---------------------------------------------------------");
+
+    }
+
+    public void printRequestForCheckout(String typeOfMediaEntity) {
         System.out.printf("Select the id of the %s you want to checkout:", typeOfMediaEntity);
         System.out.println();
     }
 
-    public void printRequestForRental(String typeOfMediaEntity){
+    public void printRequestForRental(String typeOfMediaEntity) {
         System.out.printf("Select the id of the %s you want to return:", typeOfMediaEntity);
         System.out.println();
     }
 
-    public void printNotAValidOption(){
+    public void printNotAValidOption() {
         System.out.println("Please select a valid option!");
     }
 

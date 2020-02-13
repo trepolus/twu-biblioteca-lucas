@@ -1,7 +1,5 @@
 package com.twu.biblioteca;
 
-import com.twu.authentication.LoginService;
-import com.twu.authentication.LoginServiceImpl;
 import com.twu.entities.MediaEntity;
 import com.twu.entities.User;
 import com.twu.service.LibraryService;
@@ -9,6 +7,7 @@ import com.twu.service.LibraryServiceImpl;
 import com.twu.service.UserService;
 import com.twu.service.UserServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuServiceImpl implements MenuService {
@@ -17,10 +16,9 @@ public class MenuServiceImpl implements MenuService {
     private LibraryService bookLibraryService;
     private LibraryService movieLibraryService;
     private UserService userService;
-    private LoginService loginService;
     private final String bookMediaEntityName = "book";
     private final String movieMediaEntityName = "movie";
-    private User currentUser;
+    private User loggedInUser;
 
 
     public MenuServiceImpl() {
@@ -35,14 +33,11 @@ public class MenuServiceImpl implements MenuService {
         //initialize Users
         this.userService = new UserServiceImpl();
 
-        //initialize login Authentification
-        this.loginService = new LoginServiceImpl();
-
         //initialize CLI
         this.cli = new CLI();
 
         //initialize currentUser
-        this.currentUser = null;
+        this.loggedInUser = null;
     }
 
     @Override
@@ -71,12 +66,12 @@ public class MenuServiceImpl implements MenuService {
                 checkoutMediaEntity(userInput, bookLibraryService, bookMediaEntityName);
             } else if (userDecision == 2) {
                 userInput = cli.promptUserInputForMenuOption();
-                returnMediaEntity(userInput, bookLibraryService, movieMediaEntityName);
+                returnMediaEntity(userInput, movieLibraryService, movieMediaEntityName);
             }
         }
     }
 
-    public int doRequiredBookMenuAction(String chosenOption) {
+    private int doRequiredBookMenuAction(String chosenOption) {
         List<MediaEntity> listOfBooks = bookLibraryService.getAllMediaEntitiesByLibraryId(1);
 
         switch (chosenOption) {
@@ -102,7 +97,7 @@ public class MenuServiceImpl implements MenuService {
         }
     }
 
-    public void checkoutMediaEntity(String userInput, LibraryService libraryService, String mediaEntityType){
+    private void checkoutMediaEntity(String userInput, LibraryService libraryService, String mediaEntityType) {
         try {
             int selectedOption = Integer.parseInt(userInput);
             boolean checkOutSuccessful = libraryService.checkOutMediaEntityByIdFromLibraryById(1, selectedOption, "noUser");
@@ -118,7 +113,7 @@ public class MenuServiceImpl implements MenuService {
         }
     }
 
-    public void returnMediaEntity(String userInput, LibraryService libraryService, String mediaEntityType){
+    private void returnMediaEntity(String userInput, LibraryService libraryService, String mediaEntityType) {
         try {
             int selectedOption = Integer.parseInt(userInput);
             boolean checkOutSuccessful = libraryService.returnMediaEntityByIdToLibraryById(1, selectedOption, "noUser");
@@ -141,13 +136,17 @@ public class MenuServiceImpl implements MenuService {
             cli.printMovieMenu();
             userDecision = cli.promptUserInputForMenuOption();
 
-            switch (userDecision){
+            switch (userDecision) {
                 case "0":
                     //print all available movies
                     cli.printListOfMovies(movieLibraryService.getAllMediaEntitiesByLibraryId(1), false);
                     break;
                 case "login":
-                    startLoginMenu();
+                    if (loginProcess()) {
+                        //login successful, exit loop and start new menu
+                        userDecision = "exit";
+                        startMovieMenuForLoggedInUser();
+                    }
                     break;
                 case "exit":
                     cli.printThanksGoodbye();
@@ -158,9 +157,57 @@ public class MenuServiceImpl implements MenuService {
         }
     }
 
-    private void startLoginMenu() {
+    private void startMovieMenuForLoggedInUser() {
+        String userDecision = "";
+        List<MediaEntity> listOfMovies = new ArrayList<>();
+
+        while (!userDecision.equals("exit")) {
+            listOfMovies = movieLibraryService.getAllMediaEntitiesByLibraryId(1);
+
+            cli.printMovieMenuOfLoggedInUser(loggedInUser.getLibraryId());
+            userDecision = cli.promptUserInputForMenuOption();
+
+            switch (userDecision) {
+                case "0":
+                    //print all available movies
+                    cli.printListOfMovies(listOfMovies, false);
+                    break;
+                case "1":
+                    cli.printListOfMovies(listOfMovies, false);
+                    cli.printRequestForCheckout(movieMediaEntityName);
+                    checkoutMediaEntity(cli.promptUserInputForMenuOption(), movieLibraryService, movieMediaEntityName);
+                    break;
+                case "2":
+                    cli.printListOfMovies(listOfMovies, true);
+                    cli.printRequestForRental(movieMediaEntityName);
+                    returnMediaEntity(cli.promptUserInputForMenuOption(), movieLibraryService, movieMediaEntityName);
+                    break;
+                case "3":
+                    cli.printUserInformation(loggedInUser);
+                    break;
+                case "exit":
+                    cli.printThanksGoodbye();
+                    break;
+                default:
+                    cli.printNotAValidOption();
+            }
+        }
+    }
+
+    private boolean loginProcess() {
         cli.printLoginMenu();
         String libraryId = cli.promptForLibraryNumber();
         String password = cli.promptForPassword();
+
+        //try to athenticate potential User
+        User returnedUser = userService.login(libraryId, password);
+        if (returnedUser != null) {
+            this.loggedInUser = returnedUser;
+            cli.loginSuccessful();
+            return true;
+        } else {
+            cli.loginFailed();
+            return false;
+        }
     }
 }

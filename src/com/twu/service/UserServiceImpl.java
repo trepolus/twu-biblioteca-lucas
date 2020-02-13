@@ -42,11 +42,13 @@ public class UserServiceImpl implements UserService {
         User user2 = new User("906-1189", "filmAddict99", "ilovefilms@gmx.de", "+49391003927");
         User user3 = new User("499-0102", "Dr. Wolgang Roth", "wolgang@roth.at", "+431423536");
         User user4 = new User("000-9999", "B00kG@ng$t@h", "hacker@net.org", "+11111111111");
+        User user5 = new User("000-0000", "tester", "test@net.org", "+11111111111");
 
         userDatabase.add(user1);
         userDatabase.add(user2);
         userDatabase.add(user3);
         userDatabase.add(user4);
+        userDatabase.add(user5);
     }
 
     private User getUserByLibraryId(String libraryId) {
